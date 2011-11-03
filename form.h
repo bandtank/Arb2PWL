@@ -14,11 +14,14 @@ public:
   
 public slots:
   void slot_AddedLine(const QLineF& line);
+  void on_actionSave_activated();
   
 protected:
   ClickableScene* Scene;
   
   std::vector<QLineF> Lines;
+  
+  std::string PointToString(const QPointF& point);
 };
 
 #endif
