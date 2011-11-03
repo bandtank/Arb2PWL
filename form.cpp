@@ -5,8 +5,7 @@
 
 #include "form.h"
 
-Form::Form(QWidget *parent)
-    : QWidget(parent)
+Form::Form(QWidget *parent) : QMainWindow(parent)
 {
   setupUi(this);
   
@@ -14,6 +13,7 @@ Form::Form(QWidget *parent)
   sceneBackgroundColor.setRgb(153, 255, 0);
   
   this->Scene = new ClickableScene();
+  this->Scene->setSceneRect(this->graphicsView->rect());
   
   // Set background color
 //   QBrush brush;

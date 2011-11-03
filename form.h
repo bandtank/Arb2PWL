@@ -5,15 +5,12 @@
 
 #include "ClickableScene.h"
 
-class Form : public QWidget, private Ui::Form
+class Form : public QMainWindow, private Ui::MainWindow
 {
     Q_OBJECT
 
 public:
     Form(QWidget *parent = 0);
-    
-public slots:
-  //void slot_clicked( QGraphicsSceneMouseEvent * mouseEvent );
   
 protected:
   ClickableScene* Scene;
