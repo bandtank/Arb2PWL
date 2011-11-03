@@ -23,4 +23,12 @@ Form::Form(QWidget *parent) : QMainWindow(parent)
   
   this->graphicsView->setScene(this->Scene);
   
+  this->connect(this->Scene, SIGNAL(AddedLine(QLineF)), SLOT(slot_AddedLine(QLineF)));
+  
+}
+
+void Form::slot_AddedLine(const QLineF& line)
+{
+  this->Lines.push_back(line);
+  std::cout << "There are now " << this->Lines.size() << " lines." << std::endl;
 }

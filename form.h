@@ -12,8 +12,13 @@ class Form : public QMainWindow, private Ui::MainWindow
 public:
     Form(QWidget *parent = 0);
   
+public slots:
+  void slot_AddedLine(const QLineF& line);
+  
 protected:
   ClickableScene* Scene;
+  
+  std::vector<QLineF> Lines;
 };
 
 #endif
