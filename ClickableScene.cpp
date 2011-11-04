@@ -12,8 +12,13 @@ void ClickableScene::mousePressEvent(QGraphicsSceneMouseEvent* pMouseEvent)
 {
     this->MouseIsDown = true;
 
-    x.setRect(pMouseEvent->scenePos().x(),pMouseEvent->scenePos().y(),1,1);
-    addRect(x);
+    //Create a dot at this point
+    QRectF Dot(pMouseEvent->scenePos().x(),pMouseEvent->scenePos().y(),0,0);
+    addRect(Dot);
+
+    //Create the first point in a line
+    this->LastClick.setX(pMouseEvent->scenePos().x());
+    this->LastClick.setY(pMouseEvent->scenePos().y());
 }
 
 void ClickableScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* pMouseEvent)
@@ -25,7 +30,13 @@ void ClickableScene::mouseMoveEvent(QGraphicsSceneMouseEvent* pMouseEvent)
 {
     if(this->MouseIsDown == true)
     {
-        x.setRect(pMouseEvent->scenePos().x(),pMouseEvent->scenePos().y(),1,1);
-        addRect(x);
+        qreal x = pMouseEvent->scenePos().x();
+        qreal y = pMouseEvent->scenePos().y();
+
+        QLineF Line(this->LastClick.x(),this->LastClick.y(),x,y);
+        addLine(Line);
+
+        this->LastClick.setX(x);
+        this->LastClick.setY(y);
     }
 }

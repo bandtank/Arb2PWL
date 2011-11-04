@@ -25,13 +25,13 @@ Form::Form(QWidget *parent) : QMainWindow(parent)
 
     this->graphicsView->setScene(this->Scene);
 
-    this->connect(this->Scene, SIGNAL(AddedPoint(QRectF)), SLOT(slot_AddedPoint(QRectF)));
+    this->connect(this->Scene, SIGNAL(AddedLine(QLineF)), SLOT(slot_AddedLine(QLineF)));
 }
 
-void Form::slot_AddedPoint(const QRectF& Point)
+void Form::slot_AddedLine(const QLineF& Line)
 {
-    this->Points.push_back(Point);
-    std::cout << "There are now " << this->Points.size() << " points." << std::endl;
+    this->Lines.push_back(Line);
+    std::cout << "There are now " << this->Lines.size() << " lines." << std::endl;
 }
 
 void Form::on_actionSave_activated()
@@ -53,7 +53,7 @@ void Form::on_actionSave_activated()
     fout.close();
 }
 
-std::string Form::PointToString(const QRectF& Point)
+std::string Form::PointToString(const QLineF& Line)
 {
     std::stringstream pointStringStream;
     //pointStringStream << "(" << Point.x() << ", " << Point.y() << ")";

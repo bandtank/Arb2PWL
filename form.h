@@ -13,15 +13,15 @@ class Form : public QMainWindow, private Ui::MainWindow
         Form(QWidget *parent = 0);
 
     public slots:
-      void slot_AddedPoint(const QRectF& Point);
+      void slot_AddedLine(const QLineF& Line);
       void on_actionSave_activated();
 
     protected:
       ClickableScene* Scene;
 
-      std::vector<QRectF> Points;
+      std::vector<QLineF> Lines;
 
-      std::string PointToString(const QRectF& Point);
+      std::string PointToString(const QLineF& Lines);
 };
 
 #endif

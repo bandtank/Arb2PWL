@@ -16,11 +16,11 @@ public:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* pMouseEvent);
 
 signals:
-    void AddedPoint(const QRectF& Point);
+    void AddedLine(const QLineF& Line);
   
 protected:
     bool MouseIsDown;
-    QRectF x;
+    QPointF LastClick;
 };
 
 #endif
