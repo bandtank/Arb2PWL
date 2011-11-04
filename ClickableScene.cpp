@@ -1,27 +1,31 @@
 #include "ClickableScene.h"
-
 #include <QGraphicsSceneMouseEvent>
 #include <QMouseEvent>
-
 #include <iostream>
 
 ClickableScene::ClickableScene(QWidget *parent) : QGraphicsScene()
 {
-  this->ValidLastClick = false;
-  this->LastClick.setX(0);
-  this->LastClick.setY(0);
+  this->MouseIsDown = false;
 }
 
 void ClickableScene::mousePressEvent(QGraphicsSceneMouseEvent* pMouseEvent)
 {
-  if(this->ValidLastClick)
+    this->MouseIsDown = true;
+
+    x.setRect(pMouseEvent->scenePos().x(),pMouseEvent->scenePos().y(),1,1);
+    addRect(x);
+}
+
+void ClickableScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* pMouseEvent)
+{
+    this->MouseIsDown = false;
+}
+
+void ClickableScene::mouseMoveEvent(QGraphicsSceneMouseEvent* pMouseEvent)
+{
+    if(this->MouseIsDown == true)
     {
-    QLineF line(this->LastClick.x(), this->LastClick.y(), pMouseEvent->scenePos().x(), pMouseEvent->scenePos().y());
-    this->addLine(line);
-    emit AddedLine(line);
+        x.setRect(pMouseEvent->scenePos().x(),pMouseEvent->scenePos().y(),1,1);
+        addRect(x);
     }
-  
-  this->LastClick.setX(pMouseEvent->scenePos().x());
-  this->LastClick.setY(pMouseEvent->scenePos().y());
-  this->ValidLastClick = true;
 }

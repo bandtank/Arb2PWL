@@ -9,19 +9,19 @@ class Form : public QMainWindow, private Ui::MainWindow
 {
     Q_OBJECT
 
-public:
-    Form(QWidget *parent = 0);
-  
-public slots:
-  void slot_AddedLine(const QLineF& line);
-  void on_actionSave_activated();
-  
-protected:
-  ClickableScene* Scene;
-  
-  std::vector<QLineF> Lines;
-  
-  std::string PointToString(const QPointF& point);
+    public:
+        Form(QWidget *parent = 0);
+
+    public slots:
+      void slot_AddedPoint(const QRectF& Point);
+      void on_actionSave_activated();
+
+    protected:
+      ClickableScene* Scene;
+
+      std::vector<QRectF> Points;
+
+      std::string PointToString(const QRectF& Point);
 };
 
 #endif

@@ -6,18 +6,21 @@
 
 class ClickableScene : public QGraphicsScene
 {
-  Q_OBJECT
+    Q_OBJECT
+
 public:
-  ClickableScene(QWidget *parent = 0);
+    ClickableScene(QWidget *parent = 0);
   
-  void mousePressEvent(QGraphicsSceneMouseEvent* pMouseEvent);
+    void mousePressEvent(QGraphicsSceneMouseEvent* pMouseEvent);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent* pMouseEvent);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent* pMouseEvent);
 
 signals:
-  void AddedLine(const QLineF& line);
+    void AddedPoint(const QRectF& Point);
   
 protected:
-  QPointF LastClick;
-  bool ValidLastClick;
+    bool MouseIsDown;
+    QRectF x;
 };
 
 #endif
