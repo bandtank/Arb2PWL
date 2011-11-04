@@ -15,6 +15,7 @@ class Form : public QMainWindow, private Ui::MainWindow
     public slots:
       void slot_AddedLine(const QLineF& Line);
       void on_actionSave_activated();
+      void on_pushButton_clicked();
 
     protected:
       ClickableScene* Scene;

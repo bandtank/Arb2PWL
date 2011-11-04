@@ -59,3 +59,8 @@ std::string Form::PointToString(const QLineF& Line)
     //pointStringStream << "(" << Point.x() << ", " << Point.y() << ")";
     return pointStringStream.str();
 }
+
+void Form::on_pushButton_clicked()
+{
+  this->statusBar()->showMessage("Set label text.");
+}

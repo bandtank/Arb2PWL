@@ -30,7 +30,13 @@ void ClickableScene::mouseMoveEvent(QGraphicsSceneMouseEvent* pMouseEvent)
 {
     if(this->MouseIsDown == true)
     {
-        qreal x = pMouseEvent->scenePos().x();
+        qreal x;
+        if(pMouseEvent->scenePos().x() < this->LastClick.x())
+            x = this->LastClick.x();
+        else
+            x = pMouseEvent->scenePos().x();
+
+
         qreal y = pMouseEvent->scenePos().y();
 
         QLineF Line(this->LastClick.x(),this->LastClick.y(),x,y);
