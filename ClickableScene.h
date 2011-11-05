@@ -20,7 +20,9 @@ signals:
   
 protected:
     bool MouseIsDown;
+    bool Drawing;
     QPointF LastClick;
+    QPointF NextValidX;
 };
 
 #endif

@@ -11,9 +11,6 @@ Form::Form(QWidget *parent) : QMainWindow(parent)
 {
     setupUi(this);
 
-    QColor sceneBackgroundColor;
-    sceneBackgroundColor.setRgb(153, 255, 0);
-
     this->Scene = new ClickableScene;
 
     // Manually size the scene. The scene should be fixed size for easier computations later.
