@@ -4,6 +4,7 @@
 #include "ui_form.h"
 
 #include "ClickableScene.h"
+#include "CustomGraphicsView.h"
 
 class Form : public QMainWindow, private Ui::MainWindow
 {
@@ -15,14 +16,20 @@ class Form : public QMainWindow, private Ui::MainWindow
     public slots:
       void slot_AddedLine(const QLineF& Line);
       void on_actionSave_activated();
-      void on_pushButton_clicked();
+      void on_actionOpenImageForTracing_activated();
+      void slot_SizeImage();
+      void slot_actionExit_activated();
 
     protected:
       ClickableScene* Scene;
+      CustomGraphicsView* View;
 
       std::vector<QLineF> Lines;
 
       std::string PointToString(const QLineF& Lines);
+
+      QPixmap ImageToTrace;
+      QGraphicsPixmapItem* ImageToTraceItem;
 };
 
 #endif

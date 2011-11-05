@@ -14,18 +14,21 @@ Form::Form(QWidget *parent) : QMainWindow(parent)
     QColor sceneBackgroundColor;
     sceneBackgroundColor.setRgb(153, 255, 0);
 
-    this->Scene = new ClickableScene();
-    this->Scene->setSceneRect(this->graphicsView->rect());
+    this->Scene = new ClickableScene;
 
-    //   Set background color
-    //   QBrush brush;
-    //   brush.setStyle(Qt::SolidPattern);
-    //   brush.setColor(sceneBackgroundColor);
-    //   this->Scene->setBackgroundBrush(brush);
+    // Manually size the scene. The scene should be fixed size for easier computations later.
+    QRect rect(0,0,100,100); // (x, y, width, height)
+    this->Scene->setSceneRect(rect);
 
-    this->graphicsView->setScene(this->Scene);
+    this->View = new CustomGraphicsView;
+    this->gridLayout->addWidget(this->View);
+
+    this->View->setScene(this->Scene);
+
+    this->ImageToTraceItem = NULL;
 
     this->connect(this->Scene, SIGNAL(AddedLine(QLineF)), SLOT(slot_AddedLine(QLineF)));
+    this->connect(this->View, SIGNAL(resized()), SLOT(slot_SizeImage()));
 }
 
 void Form::slot_AddedLine(const QLineF& Line)
@@ -60,7 +63,32 @@ std::string Form::PointToString(const QLineF& Line)
     return pointStringStream.str();
 }
 
-void Form::on_pushButton_clicked()
+void Form::on_actionOpenImageForTracing_activated()
 {
-  this->statusBar()->showMessage("Set label text.");
+  // Get a filename to open
+  QString fileName = QFileDialog::getOpenFileName(this, "Open", ".", "All Files (*.*)");
+
+  this->ImageToTrace.load(fileName);
+
+  this->ImageToTrace = this->ImageToTrace.scaled(this->Scene->sceneRect().size().toSize());
+
+  this->ImageToTraceItem = this->Scene->addPixmap(this->ImageToTrace);
+  this->statusBar()->showMessage("Opened " + fileName + " to trace.");
+
+  slot_SizeImage();
+}
+
+
+void Form::slot_SizeImage()
+{
+  if(this->ImageToTraceItem)
+    {
+    std::cout << "Sized image." << std::endl;
+    this->View->fitInView (this->ImageToTraceItem);
+    }
+}
+
+void Form::slot_actionExit_activated()
+{
+  exit(0);
 }
