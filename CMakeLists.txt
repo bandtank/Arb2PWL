@@ -12,3 +12,5 @@ include_directories(${include_directories} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_C
 
 ADD_EXECUTABLE(Arb2PWL main.cpp ClickableScene.cpp form.cpp ${MOCSrcs} ${UISrcs})
 TARGET_LINK_LIBRARIES(Arb2PWL ${QT_LIBRARIES})
+
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mwindows")
