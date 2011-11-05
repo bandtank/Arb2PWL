@@ -30,6 +30,8 @@ class Form : public QMainWindow, private Ui::MainWindow
 
       QPixmap ImageToTrace;
       QGraphicsPixmapItem* ImageToTraceItem;
+
+      void Trace(const std::string& fileName);
 };
 
 #endif
