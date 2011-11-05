@@ -27,6 +27,14 @@ Form::Form(QWidget *parent) : QMainWindow(parent)
 
     this->ImageToTraceItem = NULL;
 
+    QIcon saveIcon = QIcon::fromTheme("document-save");
+    actionSave->setIcon(saveIcon);
+    this->toolBar->addAction(actionSave);
+
+    QIcon openIcon = QIcon::fromTheme("document-open");
+    actionOpenImageForTracing->setIcon(saveIcon);
+    this->toolBar->addAction(actionOpenImageForTracing);
+  
     this->connect(this->Scene, SIGNAL(AddedLine(QLineF)), SLOT(slot_AddedLine(QLineF)));
     this->connect(this->View, SIGNAL(resized()), SLOT(slot_SizeImage()));
 }
