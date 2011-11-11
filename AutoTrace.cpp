@@ -1,5 +1,9 @@
 #include "AutoTrace.h"
 
+// Custom
+#include "MooreTracing.h"
+#include "Helpers.h"
+
 // ITK
 #include "itkAndImageFilter.h"
 #include "itkBinaryBallStructuringElement.h"
@@ -123,4 +127,11 @@ void Trace(const RGBImageType::Pointer image, const itk::CovariantVector<unsigne
   connectedThreshold->Update();
 
   WriteImage<ScalarImageType>(connectedThreshold->GetOutput(), "connectedThreshold.png");
+
+  // Find the extreme pixel
+  itk::Index<2> leftPixel = FindLeftMostNonZeroPixel<ScalarImageType>(connectedThreshold->GetOutput());
+  itk::Index<2> rightPixel = FindRightMostNonZeroPixel<ScalarImageType>(connectedThreshold->GetOutput());
+  std::vector< itk::Index<2> > pixelPath = MooreTrace(connectedThreshold->GetOutput(), leftPixel, rightPixel);
+  
+  WriteColoredPath(pixelPath, image->GetLargestPossibleRegion(), "ColoredPath.png");
 }
