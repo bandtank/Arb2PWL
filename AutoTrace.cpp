@@ -2,6 +2,8 @@
 
 // ITK
 #include "itkAndImageFilter.h"
+#include "itkBinaryBallStructuringElement.h"
+#include "itkBinaryDilateImageFilter.h"
 #include "itkBinaryThresholdImageFilter.h"
 #include "itkConnectedThresholdImageFilter.h"
 #include "itkImage.h"
@@ -18,9 +20,19 @@ void Trace(const RGBImageType::Pointer image, const itk::CovariantVector<unsigne
     lowerColor[component] = std::max(static_cast<int>(color[component]) - epsilon, 0); // Truncate negative values
     upperColor[component] = std::min(static_cast<int>(color[component]) + epsilon, 255); // Truncate values above 255
     }
-  std::cout << "Lower color: " << lowerColor << std::endl;
-  std::cout << "Upper color: " << upperColor << std::endl;
+  std::cout << "Lower color: ";
+  for(unsigned int i = 0; i < 3; ++i)
+    {
+    std::cout << static_cast<int>(lowerColor[i]) << " ";
+    }
+  std::cout << std::endl;
   
+  std::cout << "Upper color: ";
+  for(unsigned int i = 0; i < 3; ++i)
+    {
+    std::cout << static_cast<int>(upperColor[i]) << " ";
+    }
+  std::cout << std::endl;
   // Threshold all 3 channels and AND the result
   std::vector<ScalarImageType::Pointer> thresholdedChannels(3);
   for(unsigned int channel = 0; channel < 3; ++channel)
@@ -38,7 +50,7 @@ void Trace(const RGBImageType::Pointer image, const itk::CovariantVector<unsigne
     thresholdFilter->SetInput(indexSelectionFilter->GetOutput());
     thresholdFilter->SetLowerThreshold(lowerColor[channel]);
     thresholdFilter->SetUpperThreshold(upperColor[channel]);
-    thresholdFilter->SetInsideValue(200); // White
+    thresholdFilter->SetInsideValue(255); // White
     thresholdFilter->SetOutsideValue(0); // Black
     thresholdFilter->Update();
 
@@ -59,16 +71,36 @@ void Trace(const RGBImageType::Pointer image, const itk::CovariantVector<unsigne
   andFilter2->SetInput(1, thresholdedChannels[2]);
   andFilter2->Update();
 
-  WriteImage<ScalarImageType>(andFilter2->GetOutput(), "Thresholded.png");
+  ScalarImageType::Pointer thresholdedImage = ScalarImageType::New();
+  DeepCopy<ScalarImageType>(andFilter2->GetOutput(), thresholdedImage);
+  WriteImage<ScalarImageType>(thresholdedImage, "Thresholded.png");
   
-  // Use the location of the selection to get pixels that fit the color criterion and that are connected to the selected point.
+  // Dilate the image.
+  typedef itk::BinaryBallStructuringElement<ScalarImageType::PixelType, 2> StructuringElementType;
+  StructuringElementType structuringElement;
+  unsigned int radius = 5; // How big of holes we want to connect.
+  structuringElement.SetRadius(radius);
+  structuringElement.CreateStructuringElement();
+ 
+  typedef itk::BinaryDilateImageFilter <ScalarImageType, ScalarImageType, StructuringElementType> BinaryDilateImageFilterType;
+  BinaryDilateImageFilterType::Pointer dilateFilter = BinaryDilateImageFilterType::New();
+  dilateFilter->SetInput(thresholdedImage);
+  dilateFilter->SetKernel(structuringElement);
+  dilateFilter->SetDilateValue(255);
+  dilateFilter->Update();
+  
+  ScalarImageType::Pointer dilatedImage = ScalarImageType::New();
+  DeepCopy<ScalarImageType>(dilateFilter->GetOutput(), dilatedImage);
+  WriteImage<ScalarImageType>(dilatedImage, "Dilated.png");
+  
+  // Get pixels that are connected to the selected point.
   typedef itk::ConnectedThresholdImageFilter<ScalarImageType, ScalarImageType> ConnectedFilterType;
   ConnectedFilterType::Pointer connectedThreshold = ConnectedFilterType::New();
-  connectedThreshold->SetLower(180);
-  connectedThreshold->SetUpper(220);
+  connectedThreshold->SetLower(255);
+  connectedThreshold->SetUpper(255);
   connectedThreshold->SetReplaceValue(255);
   connectedThreshold->SetSeed(seed);
-  connectedThreshold->SetInput(andFilter2->GetOutput());
+  connectedThreshold->SetInput(dilatedImage);
   connectedThreshold->Update();
 
   WriteImage<ScalarImageType>(connectedThreshold->GetOutput(), "connectedThreshold.png");
