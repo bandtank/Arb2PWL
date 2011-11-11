@@ -4,9 +4,11 @@
 #include "itkAndImageFilter.h"
 #include "itkBinaryBallStructuringElement.h"
 #include "itkBinaryDilateImageFilter.h"
+#include "itkBinaryThinningImageFilter.h"
 #include "itkBinaryThresholdImageFilter.h"
 #include "itkConnectedThresholdImageFilter.h"
 #include "itkImage.h"
+#include "itkRescaleIntensityImageFilter.h"
 #include "itkVectorIndexSelectionCastImageFilter.h"
 
 void Trace(const RGBImageType::Pointer image, const itk::CovariantVector<unsigned char, 3>& color, const itk::Index<2>& seed)
@@ -93,6 +95,22 @@ void Trace(const RGBImageType::Pointer image, const itk::CovariantVector<unsigne
   DeepCopy<ScalarImageType>(dilateFilter->GetOutput(), dilatedImage);
   WriteImage<ScalarImageType>(dilatedImage, "Dilated.png");
   
+  // Thin/skeletonize the image
+  typedef itk::BinaryThinningImageFilter <ScalarImageType, ScalarImageType> BinaryThinningImageFilterType;
+  BinaryThinningImageFilterType::Pointer binaryThinningImageFilter = BinaryThinningImageFilterType::New();
+  binaryThinningImageFilter->SetInput(dilatedImage);
+  binaryThinningImageFilter->Update();
+
+  // Rescale the output of the thinning filter so that it can be seen (the output is 0 and 1, we want 0 and 255)
+  typedef itk::RescaleIntensityImageFilter< ScalarImageType, ScalarImageType > RescaleType;
+  RescaleType::Pointer rescaler = RescaleType::New();
+  rescaler->SetInput( binaryThinningImageFilter->GetOutput() );
+  rescaler->SetOutputMinimum(0);
+  rescaler->SetOutputMaximum(255);
+  rescaler->Update();
+  
+  WriteImage<ScalarImageType>(rescaler->GetOutput(), "Thinned.png");
+  
   // Get pixels that are connected to the selected point.
   typedef itk::ConnectedThresholdImageFilter<ScalarImageType, ScalarImageType> ConnectedFilterType;
   ConnectedFilterType::Pointer connectedThreshold = ConnectedFilterType::New();
@@ -100,7 +118,8 @@ void Trace(const RGBImageType::Pointer image, const itk::CovariantVector<unsigne
   connectedThreshold->SetUpper(255);
   connectedThreshold->SetReplaceValue(255);
   connectedThreshold->SetSeed(seed);
-  connectedThreshold->SetInput(dilatedImage);
+  connectedThreshold->SetInput(rescaler->GetOutput());
+  connectedThreshold->SetConnectivity(ConnectedFilterType::FullConnectivity); // consider 8 neighbors when deciding connectivity
   connectedThreshold->Update();
 
   WriteImage<ScalarImageType>(connectedThreshold->GetOutput(), "connectedThreshold.png");
