@@ -201,7 +201,7 @@ itk::Index<2> FindFirstPixel(const UnsignedCharImageType::Pointer image)
 
 unsigned int CountNonZeroPixels(const UnsignedCharImageType::Pointer image)
 {
-  typename itk::ImageRegionConstIterator<UnsignedCharImageType> imageIterator(image, image->GetLargestPossibleRegion());
+  itk::ImageRegionConstIterator<UnsignedCharImageType> imageIterator(image, image->GetLargestPossibleRegion());
 
   unsigned int numberOfNonZeroPixels = 0;
   while(!imageIterator.IsAtEnd())
