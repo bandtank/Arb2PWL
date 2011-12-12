@@ -40,6 +40,11 @@ Form::Form(QWidget *parent) : QMainWindow(parent)
     this->connect(this->View, SIGNAL(resized()), SLOT(slot_SizeImage()));
 }
 
+void Form::showEvent ( QShowEvent * event )
+{
+  this->View->fitInView(this->Scene->sceneRect(), Qt::KeepAspectRatio);
+}
+
 void Form::slot_AddedLine(const QLineF& Line)
 {
     this->Lines.push_back(Line);
@@ -93,7 +98,7 @@ void Form::slot_SizeImage()
   if(this->ImageToTraceItem)
     {
     std::cout << "Sized image." << std::endl;
-    this->View->fitInView (this->ImageToTraceItem);
+    this->View->fitInView(this->ImageToTraceItem);
     }
 }
 

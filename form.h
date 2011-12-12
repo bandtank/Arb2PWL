@@ -11,7 +11,7 @@ class Form : public QMainWindow, private Ui::MainWindow
     Q_OBJECT
 
     public:
-        Form(QWidget *parent = 0);
+      Form(QWidget *parent = 0);
 
     public slots:
       void slot_AddedLine(const QLineF& Line);
@@ -21,6 +21,9 @@ class Form : public QMainWindow, private Ui::MainWindow
       void slot_actionExit_activated();
 
     protected:
+      void showEvent ( QShowEvent * event );
+      //void resizeEvent ( QResizeEvent * event );
+
       ClickableScene* Scene;
       CustomGraphicsView* View;
 
