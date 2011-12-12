@@ -33,7 +33,7 @@ Form::Form(QWidget *parent) : QMainWindow(parent)
     this->toolBar->addAction(actionSave);
 
     QIcon openIcon = QIcon::fromTheme("document-open");
-    actionOpenImageForTracing->setIcon(saveIcon);
+    actionOpenImageForTracing->setIcon(openIcon);
     this->toolBar->addAction(actionOpenImageForTracing);
   
     this->connect(this->Scene, SIGNAL(AddedLine(QLineF)), SLOT(slot_AddedLine(QLineF)));
