@@ -15,7 +15,7 @@
 #include "itkRescaleIntensityImageFilter.h"
 #include "itkVectorIndexSelectionCastImageFilter.h"
 
-void Trace(const RGBImageType::Pointer image, const itk::CovariantVector<unsigned char, 3>& color, const itk::Index<2>& seed)
+void Trace(const RGBImageType* const image, const itk::CovariantVector<unsigned char, 3>& color, const itk::Index<2>& seed)
 {
   // Create a color epsilon lower than the user supplied color
   int epsilon = 10;
@@ -61,7 +61,7 @@ void Trace(const RGBImageType::Pointer image, const itk::CovariantVector<unsigne
     thresholdFilter->Update();
 
     thresholdedChannels[channel] = ScalarImageType::New();
-    DeepCopy<ScalarImageType>(thresholdFilter->GetOutput(), thresholdedChannels[channel]);
+    DeepCopy(thresholdFilter->GetOutput(), thresholdedChannels[channel].GetPointer());
     }
 
   // Keep only region where all channels passed the threshold test
@@ -78,8 +78,8 @@ void Trace(const RGBImageType::Pointer image, const itk::CovariantVector<unsigne
   andFilter2->Update();
 
   ScalarImageType::Pointer thresholdedImage = ScalarImageType::New();
-  DeepCopy<ScalarImageType>(andFilter2->GetOutput(), thresholdedImage);
-  WriteImage<ScalarImageType>(thresholdedImage, "Thresholded.png");
+  DeepCopy(andFilter2->GetOutput(), thresholdedImage.GetPointer());
+  WriteImage(thresholdedImage.GetPointer(), "Thresholded.png");
   
   // Dilate the image.
   typedef itk::BinaryBallStructuringElement<ScalarImageType::PixelType, 2> StructuringElementType;
@@ -96,8 +96,8 @@ void Trace(const RGBImageType::Pointer image, const itk::CovariantVector<unsigne
   dilateFilter->Update();
   
   ScalarImageType::Pointer dilatedImage = ScalarImageType::New();
-  DeepCopy<ScalarImageType>(dilateFilter->GetOutput(), dilatedImage);
-  WriteImage<ScalarImageType>(dilatedImage, "Dilated.png");
+  DeepCopy(dilateFilter->GetOutput(), dilatedImage.GetPointer());
+  WriteImage(dilatedImage.GetPointer(), "Dilated.png");
   
   // Thin/skeletonize the image
   typedef itk::BinaryThinningImageFilter <ScalarImageType, ScalarImageType> BinaryThinningImageFilterType;
@@ -113,7 +113,7 @@ void Trace(const RGBImageType::Pointer image, const itk::CovariantVector<unsigne
   rescaler->SetOutputMaximum(255);
   rescaler->Update();
   
-  WriteImage<ScalarImageType>(rescaler->GetOutput(), "Thinned.png");
+  WriteImage(rescaler->GetOutput(), "Thinned.png");
   
   // Get pixels that are connected to the selected point.
   typedef itk::ConnectedThresholdImageFilter<ScalarImageType, ScalarImageType> ConnectedFilterType;
@@ -126,7 +126,7 @@ void Trace(const RGBImageType::Pointer image, const itk::CovariantVector<unsigne
   connectedThreshold->SetConnectivity(ConnectedFilterType::FullConnectivity); // consider 8 neighbors when deciding connectivity
   connectedThreshold->Update();
 
-  WriteImage<ScalarImageType>(connectedThreshold->GetOutput(), "connectedThreshold.png");
+  WriteImage(connectedThreshold->GetOutput(), "connectedThreshold.png");
 
   // Find the extreme pixel
   itk::Index<2> leftPixel = FindLeftMostNonZeroPixel<ScalarImageType>(connectedThreshold->GetOutput());

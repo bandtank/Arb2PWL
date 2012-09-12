@@ -1,5 +1,12 @@
+#ifndef Helpers_HXX
+#define Helpers_HXX
+
+#include "Helpers.h"
+
+#include "itkImageRegionConstIteratorWithIndex.h"
+
 template <typename TImage>
-void WriteImage(const typename TImage::Pointer image, const std::string& fileName)
+void WriteImage(const TImage* const image, const std::string& fileName)
 {
   typedef  itk::ImageFileWriter<TImage> WriterType;
   typename WriterType::Pointer writer = WriterType::New();
@@ -9,7 +16,7 @@ void WriteImage(const typename TImage::Pointer image, const std::string& fileNam
 }
 
 template<typename TImage>
-void DeepCopy(typename TImage::Pointer input, typename TImage::Pointer output)
+void DeepCopy(const TImage* const input, TImage* const output)
 {
   output->SetRegions(input->GetLargestPossibleRegion());
   output->Allocate();
@@ -26,46 +33,50 @@ void DeepCopy(typename TImage::Pointer input, typename TImage::Pointer output)
 }
 
 template<typename TImage>
-itk::Index<2> FindLeftMostNonZeroPixel(const typename TImage::Pointer input)
+itk::Index<2> FindLeftMostNonZeroPixel(const TImage* const image)
 {
-  itk::ImageRegionConstIterator<TImage> inputIterator(input, input->GetLargestPossibleRegion());
+  itk::ImageRegionConstIteratorWithIndex<TImage> imageIterator(image, image->GetLargestPossibleRegion());
   
+  // Initialize
   itk::Index<2> leftMostPixel;
-  leftMostPixel[0] = input->GetLargestPossibleRegion().GetSize()[0];
-  leftMostPixel[1] = input->GetLargestPossibleRegion().GetSize()[1];
-  while(!inputIterator.IsAtEnd())
+  leftMostPixel[0] = image->GetLargestPossibleRegion().GetSize()[0];
+  leftMostPixel[1] = image->GetLargestPossibleRegion().GetSize()[1];
+  while(!imageIterator.IsAtEnd())
     {
-    if(inputIterator.Get())
+    if(imageIterator.Get())
       {
-      if(inputIterator.GetIndex()[0] < leftMostPixel[0])
+      if(imageIterator.GetIndex()[0] < leftMostPixel[0])
 	{
-	leftMostPixel = inputIterator.GetIndex();
+        leftMostPixel = imageIterator.GetIndex();
 	}
       }
-    ++inputIterator;
+    ++imageIterator;
     }
     
   return leftMostPixel;
 }
 
 template<typename TImage>
-itk::Index<2> FindRightMostNonZeroPixel(const typename TImage::Pointer input)
+itk::Index<2> FindRightMostNonZeroPixel(const TImage* const image)
 {
-  itk::ImageRegionConstIterator<TImage> inputIterator(input, input->GetLargestPossibleRegion());
+  itk::ImageRegionConstIteratorWithIndex<TImage> imageIterator(image, image->GetLargestPossibleRegion());
   
+  // Initialize
   itk::Index<2> rightMostPixel;
   rightMostPixel.Fill(0);
-  while(!inputIterator.IsAtEnd())
+  while(!imageIterator.IsAtEnd())
     {
-    if(inputIterator.Get())
+    if(imageIterator.Get())
       {
-      if(inputIterator.GetIndex()[0] > rightMostPixel[0])
+      if(imageIterator.GetIndex()[0] > rightMostPixel[0])
 	{
-	rightMostPixel = inputIterator.GetIndex();
+        rightMostPixel = imageIterator.GetIndex();
 	}
       }
-    ++inputIterator;
+    ++imageIterator;
     }
     
   return rightMostPixel;  
 }
+
+#endif
