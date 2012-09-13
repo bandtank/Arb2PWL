@@ -25,25 +25,45 @@
 // STL
 #include <vector>
 
-typedef itk::Image<unsigned char, 2> UnsignedCharImageType;
+/** Perform a raster scan until a non-zero pixel is reached. */
+template <typename TImage>
+itk::Index<2> FindFirstPixel(const TImage* const image);
 
-std::vector< itk::Offset<2> > GetAllOffsets();
+/** The 'backtrack' input has two uses. First, it is used to know where to start the traversal.
+  * Second, it returns the next backtrack position by reference. */
+template <typename TImage>
+itk::Index<2> FindNextPixel(const TImage* const image,
+                            itk::Index<2> currentPixel, itk::Offset<2>& backtrack);
 
-std::vector< itk::Offset<2> > GetOrderedOffsets(itk::Offset<2> firstOffset);
+/** This function returns true if an 8-connected neighbor is found with the queryValue.
+  * If it is, the location of this pixel is returned by reference in 'neighbor'.
+  * Returns false otherwise. */
+template <typename TImage>
+bool FindNeighborWithValue(const TImage* const image,
+                           itk::Index<2> queryPixel, unsigned char queryValue,
+                           itk::Offset<2>& neighbor);
 
-itk::Index<2> FindFirstPixel(const UnsignedCharImageType::Pointer image);
+/** Trace the contour of a region.
+  * This function expects a black image with a single contour to trace. */
+template <typename TImage>
+std::vector< itk::Index<2> > MooreTrace(const TImage* const image,
+                                        const itk::Index<2>& startingPixel, const itk::Index<2>& endingPixel);
 
-itk::Index<2> FindNextPixel(const UnsignedCharImageType::Pointer image, itk::Index<2> currentPixel, itk::Offset<2>& backtrack);
+/** Count how many non-zero pixels are in 'image'. */
+template <typename TImage>
+unsigned int CountNonZeroPixels(const TImage* const image);
 
-bool FindNeighborWithValue(const UnsignedCharImageType::Pointer image, itk::Index<2> queryPixel, unsigned char queryValue, itk::Offset<2>& neighbor);
+// Non-template functions
+void WriteColoredPath(const std::vector< itk::Index<2> >& pixelPath,
+                      const itk::ImageRegion<2>& region, const std::string& fileName);
 
-// This function expects a black image with a single contour to trace
-// std::vector< itk::Index<2> > MooreTrace(const UnsignedCharImageType::Pointer image);
+/** Get a collection of the 8-neighbor offsets (of any pixel, since they are relative). */
+std::vector<itk::Offset<2> > Get8NeighborOffsets();
 
-std::vector< itk::Index<2> > MooreTrace(const UnsignedCharImageType::Pointer image, const itk::Index<2>& startingPixel, const itk::Index<2>& endingPixel);
+/** Get a collection of the 8-neighbor offsets (of any pixel, since they are relative),
+  * starting at 'firstOffset'. */
+std::vector<itk::Offset<2> > GetOrdered8NeighborOffsets(itk::Offset<2> firstOffset);
 
-unsigned int CountNonZeroPixels(const UnsignedCharImageType::Pointer image);
-
-void WriteColoredPath(const std::vector< itk::Index<2> >& pixelPath, const itk::ImageRegion<2>& region, const std::string& fileName);
+#include "MooreTracing.hpp"
 
 #endif
