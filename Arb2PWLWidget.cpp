@@ -8,10 +8,10 @@
 #include <sstream>
 
 // Custom
-#include "form.h"
+#include "Arb2PWLWidget.h"
 //#include "MooreTracing.h"
 
-Form::Form(QWidget *parent) : QMainWindow(parent)
+Arb2PWLWidget::Arb2PWLWidget(QWidget *parent) : QMainWindow(parent)
 {
     setupUi(this);
 
@@ -40,18 +40,18 @@ Form::Form(QWidget *parent) : QMainWindow(parent)
     this->connect(this->View, SIGNAL(resized()), SLOT(slot_SizeImage()));
 }
 
-void Form::showEvent ( QShowEvent * event )
+void Arb2PWLWidget::showEvent ( QShowEvent * event )
 {
   this->View->fitInView(this->Scene->sceneRect(), Qt::KeepAspectRatio);
 }
 
-void Form::slot_AddedLine(const QLineF& Line)
+void Arb2PWLWidget::slot_AddedLine(const QLineF& Line)
 {
     this->Lines.push_back(Line);
     std::cout << "There are now " << this->Lines.size() << " lines." << std::endl;
 }
 
-void Form::on_actionSave_activated()
+void Arb2PWLWidget::on_actionSave_activated()
 {
     QString fileName = QFileDialog::getSaveFileName(this, "Save", ".", "Text Files (*.txt)");
 
@@ -70,7 +70,7 @@ void Form::on_actionSave_activated()
     fout.close();
 }
 
-void Form::on_actionOpenImageForTracing_activated()
+void Arb2PWLWidget::on_actionOpenImageForTracing_activated()
 {
   // Get a filename to open
   QString fileName = QFileDialog::getOpenFileName(this, "Open", ".", "All Files (*.*)");
@@ -86,7 +86,7 @@ void Form::on_actionOpenImageForTracing_activated()
 }
 
 
-void Form::slot_SizeImage()
+void Arb2PWLWidget::slot_SizeImage()
 {
   if(this->ImageToTraceItem)
     {
@@ -95,12 +95,12 @@ void Form::slot_SizeImage()
     }
 }
 
-void Form::slot_actionExit_activated()
+void Arb2PWLWidget::slot_actionExit_activated()
 {
   QApplication::quit();
 }
 
-void Form::resizeEvent ( QResizeEvent * event )
+void Arb2PWLWidget::resizeEvent ( QResizeEvent * event )
 {
 
 }

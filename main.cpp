@@ -1,11 +1,11 @@
 #include <QApplication>
-#include "form.h"
+#include "Arb2PWLWidget.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    Form form;
+    Arb2PWLWidget arb2PWLWidget;
 
-    form.show();
+    arb2PWLWidget.show();
     return app.exec();
 }

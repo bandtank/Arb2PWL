@@ -1,18 +1,18 @@
-#ifndef FORM_H
-#define FORM_H
+#ifndef Arb2PWLWidget_H
+#define Arb2PWLWidget_H
 
-#include "ui_form.h"
+#include "ui_Arb2PWLWidget.h"
 
 #include "ClickableScene.h"
 #include "CustomGraphicsView.h"
 
-class Form : public QMainWindow, private Ui::MainWindow
+class Arb2PWLWidget : public QMainWindow, private Ui::Arb2PWLWidget
 {
     Q_OBJECT
 
     public:
       /** Constructor. */
-      Form(QWidget *parent = 0);
+      Arb2PWLWidget(QWidget *parent = 0);
 
     public slots:
       /** Handle adding a new line. */

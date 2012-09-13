@@ -11,8 +11,8 @@ INCLUDE(${ITK_USE_FILE})
 FIND_PACKAGE(Qt4 REQUIRED)
 INCLUDE(${QT_USE_FILE})
 
-QT4_WRAP_UI(UISrcs form.ui)
-QT4_WRAP_CPP(MOCSrcs form.h  ClickableScene.h CustomGraphicsView.h)
+QT4_WRAP_UI(UISrcs Arb2PWLWidget.ui)
+QT4_WRAP_CPP(MOCSrcs Arb2PWLWidget.h  ClickableScene.h CustomGraphicsView.h)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -23,7 +23,7 @@ Helpers.h
 Helpers.hpp
 MooreTracing.hpp)
 
-ADD_EXECUTABLE(Arb2PWL main.cpp ClickableScene.cpp form.cpp ${MOCSrcs} ${UISrcs})
+ADD_EXECUTABLE(Arb2PWL main.cpp ClickableScene.cpp Arb2PWLWidget.cpp ${MOCSrcs} ${UISrcs})
 TARGET_LINK_LIBRARIES(Arb2PWL ${QT_LIBRARIES} ${ITK_LIBRARIES} AutoTrace)
 
 ADD_EXECUTABLE(TestAutoTrace Tests/TestAutoTrace.cpp)
