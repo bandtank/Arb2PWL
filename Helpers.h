@@ -17,6 +17,6 @@ itk::Index<2> FindLeftMostNonZeroPixel(const TImage* const image);
 template<typename TImage>
 itk::Index<2> FindRightMostNonZeroPixel(const TImage* const image);
 
-#include "Helpers.hxx"
+#include "Helpers.hpp"
 
 #endif

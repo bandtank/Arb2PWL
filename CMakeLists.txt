@@ -18,8 +18,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
 # The hxx files are only added so that they are included in the QtCreator/VS project.
 add_library(AutoTrace AutoTrace.cpp MooreTracing.cpp
-AutoTrace.hxx
-Helpers.hxx
+AutoTrace.hpp
+Helpers.h
+Helpers.hpp
 MooreTracing.hpp)
 
 ADD_EXECUTABLE(Arb2PWL main.cpp ClickableScene.cpp form.cpp ${MOCSrcs} ${UISrcs})

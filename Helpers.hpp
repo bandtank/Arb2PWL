@@ -1,5 +1,5 @@
-#ifndef Helpers_HXX
-#define Helpers_HXX
+#ifndef Helpers_HPP
+#define Helpers_HPP
 
 #include "Helpers.h"
 
