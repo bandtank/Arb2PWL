@@ -62,19 +62,12 @@ void Form::on_actionSave_activated()
     //Write the first point of each line
     //for(unsigned int i = 0; i < this->Points.size(); ++i)
     //{
-        //fout << PointToString(this->Points[i].p1()) << std::endl;
+        //fout << this->Points[i].p1() << std::endl;
     //}
 
     // Write the second point of the last line
-    //fout << PointToString(this->Points[this->Points.size() - 1].p2()) << std::endl;
+    //fout << this->Points[this->Points.size() - 1].p2() << std::endl;
     fout.close();
-}
-
-std::string Form::PointToString(const QLineF& Line)
-{
-    std::stringstream pointStringStream;
-    //pointStringStream << "(" << Point.x() << ", " << Point.y() << ")";
-    return pointStringStream.str();
 }
 
 void Form::on_actionOpenImageForTracing_activated()
@@ -97,12 +90,31 @@ void Form::slot_SizeImage()
 {
   if(this->ImageToTraceItem)
     {
-    std::cout << "Sized image." << std::endl;
+//    std::cout << "Sized image." << std::endl;
     this->View->fitInView(this->ImageToTraceItem);
     }
 }
 
 void Form::slot_actionExit_activated()
 {
-  exit(0);
+  QApplication::quit();
+}
+
+void Form::resizeEvent ( QResizeEvent * event )
+{
+
+}
+
+std::ostream& operator<<(std::ostream& output, const QPointF &point)
+{
+  output << "(" << point.x() << ", " << point.y() << ")";
+
+  return output;
+}
+
+std::ostream& operator<<(std::ostream& output, const QLineF &line)
+{
+  output << "P1: " << line.p1() << " P1: " << line.p2();
+
+  return output;
 }
