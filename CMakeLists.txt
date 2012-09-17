@@ -17,17 +17,21 @@ QT4_WRAP_CPP(MOCSrcs Arb2PWLWidget.h  ClickableScene.h CustomGraphicsView.h)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
 # The hxx files are only added so that they are included in the QtCreator/VS project.
-add_library(AutoTrace AutoTrace.cpp MooreTracing.cpp AutoTrace.hpp Helpers.h Helpers.hpp MooreTracing.hpp)
+add_library(AutoTrace AutoTrace.cpp MooreTracing.cpp
+AutoTrace.hpp
+Helpers.h
+Helpers.hpp
+MooreTracing.hpp)
 
 ADD_EXECUTABLE(Arb2PWL main.cpp ClickableScene.cpp Arb2PWLWidget.cpp ${MOCSrcs} ${UISrcs})
-TARGET_LINK_LIBRARIES(Arb2PWL ${QT_LIBRARIES} ${QT_QTMAIN_LIBRARY} ${ITK_LIBRARIES} AutoTrace)
+TARGET_LINK_LIBRARIES(Arb2PWL ${QT_LIBRARIES} ${ITK_LIBRARIES} AutoTrace)
 
-#ADD_EXECUTABLE(TestAutoTrace Tests/TestAutoTrace.cpp)
-#TARGET_LINK_LIBRARIES(TestAutoTrace ${QT_LIBRARIES} ${ITK_LIBRARIES} AutoTrace)
+ADD_EXECUTABLE(TestAutoTrace Tests/TestAutoTrace.cpp)
+TARGET_LINK_LIBRARIES(TestAutoTrace ${QT_LIBRARIES} ${ITK_LIBRARIES} AutoTrace)
 
 IF(WIN32)
   if(MSVC)
-    set_target_properties(Arb2PWL PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
+    SET(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} /SUBSYSTEM:WINDOWS")
   elseif(CMAKE_COMPILER_IS_GNUCXX)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mwindows")
   else()
