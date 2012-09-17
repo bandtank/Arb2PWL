@@ -62,7 +62,7 @@ void ClickableScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* pMouseEvent)
     if(this->Drawing == true)
     {
         this->NextValidX.setX(pMouseEvent->scenePos().x() + 1);
-        this->Drawing == false;
+        this->Drawing = false;
     }
 }
 
